@@ -6,7 +6,7 @@ from todo.models import Item
 # Create your views here.
 def home_page(request):
 	if request.method == 'POST':
-		Item.objects.create(text = request.POST['new_item'])
+		Item.objects.create(text = request.POST['new_item_text'])
 		return redirect('/')
 	else:
 		items = Item.objects.all()

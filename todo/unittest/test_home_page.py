@@ -43,7 +43,7 @@ class HomePageTest(TestCase):
     def test_home_page_redirects_after_post(self):
         request = HttpRequest()
         request.method = 'POST'
-        request.POST['new_item_text'] = 'A new list item'
+        request.POST['new_item_text'] = 'item 1'
 
         response = home_page(request)
 
@@ -52,7 +52,7 @@ class HomePageTest(TestCase):
         self.assertEqual(response['location'], '/')
 
     def test_home_page_displays_all_list_items(self):
-        new_item_texts = ['Submit CS 145 Machine Problem', 'Submit CS 180 Machine Problem']
+        new_item_texts = ['item 1', 'item 2']
         Item.objects.create(text=[text for text in new_item_texts])
         request = HttpRequest()
 

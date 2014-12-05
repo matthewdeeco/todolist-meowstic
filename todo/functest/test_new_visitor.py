@@ -1,15 +1,14 @@
-from django.test import TestCase
+from django.test import LiveServerTestCase
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 
-class NewVisitorTest(TestCase):
+class NewVisitorTest(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
-        self.address = 'http://localhost:8000'
+        self.browser.implicitly_wait(10)
 
     def tearDown(self):
         self.browser.quit()
@@ -20,13 +19,13 @@ class NewVisitorTest(TestCase):
         self.assertIn(row_text, [row.text for row in rows])
 
     def input_new_item(self, text):
-        inputbox = self.browser.find_element_by_id('new_item')
+        inputbox = self.browser.find_element_by_id('new_item_text')
         inputbox.send_keys(text)
         inputbox.send_keys(Keys.ENTER)
 
     def test_can_start_a_list_and_retrieve_it_later(self):
-        self.browser.get(self.address)
-        texts = ['Submit CS 145 Machine Problem', 'Submit CS 180 Machine Problem']
+        self.browser.get(self.live_server_url)
+        texts = ['item 1', 'item 2']
 
         self.input_new_item(texts[0])
         self.browser.implicitly_wait(5)
