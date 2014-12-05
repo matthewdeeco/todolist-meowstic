@@ -3,18 +3,9 @@ from django.core.urlresolvers import reverse, resolve
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 
-from selenium import webdriver
-
 from todo.views import index_page
 
 class IndexPageTest(TestCase):
-	def setUp(self):
-		# self.browser = webdriver.Firefox()
-		pass
-	
-	def tearDown(self):
-		# self.browser.quit()
-		pass
 	
 	def test_root_url_resolves_to_index_page(self):
 		found = resolve('/')
