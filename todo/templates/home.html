@@ -5,7 +5,7 @@
 <body>
 	<h1>To-Do {% now "d F Y" %}</h1>
 	<form method="POST">
-		<input id="new_item_text" name="new_item_text" placeholder="Enter a to-do item" />
+		<input id="new_item_text" name="new_item_text" placeholder="New To-Do" />
 		{% csrf_token %}
 	</form>
     <table id="item_list">
