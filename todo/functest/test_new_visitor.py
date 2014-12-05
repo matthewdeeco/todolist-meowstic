@@ -20,7 +20,6 @@ class NewVisitorTest(TestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         self.browser.get(self.address)
-
         new_item_texts = ['Submit CS 145 Machine Problem', 'Submit CS 180 Machine Problem']
 
         # Input 2 items

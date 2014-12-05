@@ -28,5 +28,11 @@ class HomePageTest(TestCase):
 		request.POST['new_item_text'] = new_item_text
 
 		response = home_page(request)
+
+		self.assertEqual(Item.objects.count(), 1)
+		new_item = Item.objects.first()
+		self.assertEqual(new_item.text, new_item_text)
+
 		self.assertIn(new_item_text, response.content.decode())
 		expected_html = render_to_string('home.html', {'new_item_text' : new_item_text})
+		self.assertEqual(response.content.decode(), expected_html)
