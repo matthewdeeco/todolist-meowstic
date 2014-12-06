@@ -33,39 +33,34 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
 
     def test_can_start_a_list_and_retrieve_it_later(self):
-        texts = ['item 1', 'item 2']
+        mdco_items = ['item 1', 'item 2']
 
         User.objects.create_user(username='mdco', password='password', email='mdco@example.com')
         self.login_user('mdco')
-        self.input_new_item(texts[0])
-        self.check_for_item_in_item_list(texts[0])
-        # check that user is assigned a personal list url
-        list_url = self.browser.current_url
-        ## self.assertRegex(list_url, '/lists/.+')
+        self.input_new_item(mdco_items[0])
+        self.check_for_item_in_item_list(mdco_items[0])
 
         # check that both items are visible in the page
-        self.input_new_item(texts[1])
+        self.input_new_item(mdco_items[1])
         self.browser.implicitly_wait(5)
-        self.check_for_item_in_item_list(texts[0])
-        self.check_for_item_in_item_list(texts[1])
+        self.check_for_item_in_item_list(mdco_items[0])
+        self.check_for_item_in_item_list(mdco_items[1])
 
-        """
-        # switch to user 2
+        # switch to user spfestin
         self.tearDown()
         self.setUp()
-        # list from user 1 must not be viewable
+        User.objects.create_user(username='spfestin', password='password', email='spfestin@example.com')
+        self.login_user('spfestin')
+
         page_text = self.browser.find_element_by_tag_name('body').text
-        self.assertNotIn(texts[0], page_text)
-        self.assertNotIn(texts[1], page_text)
-        # list url must be different from user 1's
-        text2 = 'send email'
-        self.input_new_item(text2)
-        list_url2 = self.browser.current_url
-        self.assertRegex(list_url2, '/lists/.+')
-        self.assertNotEqual(list_url, list_url2)
-        # list from user 1 must still not be viewable, but user 2's is
+        self.assertNotIn(mdco_items[0], page_text)
+        self.assertNotIn(mdco_items[1], page_text)
+        
+        spfestin_item = 'item 3'
+        self.input_new_item(spfestin_item)
+
+        # list from mdco must still not be viewable, but spfestin's is
         page_text = self.browser.find_element_by_tag_name('body').text
-        self.assertNotIn(texts[0], page_text)
-        self.assertNotIn(texts[1], page_text)
-        self.assertIn(text2, page_text)
-        """
+        self.assertNotIn(mdco_items[0], page_text)
+        self.assertNotIn(mdco_items[1], page_text)
+        self.assertIn(spfestin_item, page_text)
