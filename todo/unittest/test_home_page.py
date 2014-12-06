@@ -24,7 +24,6 @@ class HomePageTest(TestCase):
 
     def test_home_page_can_save_post_request(self):
         new_item_text = 'A new list item'
-
         self.create_and_login_user()
         response = self.client.post('/home/', data={'new_item_text' : new_item_text})
 
@@ -40,9 +39,9 @@ class HomePageTest(TestCase):
 
     def test_user_items_not_visible_to_others(self):
         new_item_texts = ['item 1', 'item 2']
-        Item.objects.create(text=[text for text in new_item_texts])
-        
         self.create_and_login_user(username='mdco')
+        user_mdco = authenticate(username='mdco', password='password')
+        Item.objects.create(text=[text for text in new_item_texts], user=user_mdco)
         response = self.client.get('/home/')
         
         for text in new_item_texts:

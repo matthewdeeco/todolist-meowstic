@@ -27,10 +27,10 @@ def login_page(request):
 @login_required
 def home_page(request):
 	if request.method == 'POST':
-		Item.objects.create(text = request.POST['new_item_text'])
+		Item.objects.create(text = request.POST['new_item_text'], user=request.user)
 		return redirect('/home/')
 	else:
-		items = Item.objects.all()
+		items = Item.objects.filter(user=request.user)
 		return render(request, 'home.html', {'items' : items})
 
 def logout_page(request):
