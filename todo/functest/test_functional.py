@@ -1,4 +1,5 @@
 from django.test import LiveServerTestCase
+from django.contrib.auth.models import User
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -10,6 +11,13 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(10)
         self.browser.get(self.live_server_url)
+
+    def login_user(self, username, password='password'):
+        username_box = self.browser.find_element_by_id('username')
+        username_box.send_keys(username)
+        password_box = self.browser.find_element_by_id('password')
+        password_box.send_keys(password)
+        password_box.send_keys(Keys.ENTER)
 
     def tearDown(self):
         self.browser.quit()
@@ -27,6 +35,8 @@ class NewVisitorTest(LiveServerTestCase):
     def test_can_start_a_list_and_retrieve_it_later(self):
         texts = ['item 1', 'item 2']
 
+        User.objects.create_user(username='mdco', password='password', email='mdco@example.com')
+        self.login_user('mdco')
         self.input_new_item(texts[0])
         self.check_for_item_in_item_list(texts[0])
         # check that user is assigned a personal list url

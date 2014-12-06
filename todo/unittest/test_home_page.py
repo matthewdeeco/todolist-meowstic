@@ -9,7 +9,7 @@ from todo.models import Item
 
 class HomePageTest(TestCase):
 
-    def login_user(self, username='mdco', password='password'):
+    def create_and_login_user(self, username='mdco', password='password'):
         User.objects.create_user(username=username, password=password, email='mdco@example.com')
         self.client.login(username=username, password=password)
     
@@ -18,14 +18,14 @@ class HomePageTest(TestCase):
         self.assertTemplateUsed(response, 'login.html')
 
     def test_home_page_exists(self):
-        self.login_user()
+        self.create_and_login_user()
         response = self.client.get('/home/')
         self.assertEqual(response.status_code, 200)
 
     def test_home_page_can_save_post_request(self):
         new_item_text = 'A new list item'
 
-        self.login_user()
+        self.create_and_login_user()
         response = self.client.post('/home/', data={'new_item_text' : new_item_text})
 
         # item must have been added to database
@@ -34,7 +34,7 @@ class HomePageTest(TestCase):
         self.assertEqual(new_item.text, new_item_text)
 
     def test_user_still_at_home_page_after_post(self):
-        self.login_user()
+        self.create_and_login_user()
         response = self.client.post('/home/', data={'new_item_text' : 'item 1'}, follow=True)
         self.assertTemplateUsed(response, 'home.html')
 
@@ -42,7 +42,7 @@ class HomePageTest(TestCase):
         new_item_texts = ['item 1', 'item 2']
         Item.objects.create(text=[text for text in new_item_texts])
         
-        self.login_user()
+        self.create_and_login_user()
         response = self.client.get('/home/')
         
         for text in new_item_texts:

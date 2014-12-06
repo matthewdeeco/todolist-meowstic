@@ -7,7 +7,7 @@ from todo.views import index_page, home_page, login_page
 
 class IndexPageTest(TestCase):
 
-    def login_user(self, username='mdco', password='password'):
+    def create_and_login_user(self, username='mdco', password='password'):
         User.objects.create_user(username=username, password=password, email='mdco@example.com')
         self.client.login(username=username, password=password)
 
@@ -20,7 +20,7 @@ class IndexPageTest(TestCase):
         self.assertTemplateUsed(response, 'login.html')
 
     def test_index_page_redirects_to_home_page_if_logged_in(self):
-        self.login_user()
+        self.create_and_login_user()
         response = self.client.get('/', follow=True)
         self.assertTemplateUsed(response, 'home.html')
 
