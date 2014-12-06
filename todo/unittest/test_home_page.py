@@ -38,12 +38,18 @@ class HomePageTest(TestCase):
         response = self.client.post('/home/', data={'new_item_text' : 'item 1'}, follow=True)
         self.assertTemplateUsed(response, 'home.html')
 
-    def test_home_page_displays_all_list_items(self):
+    def test_user_items_not_visible_to_others(self):
         new_item_texts = ['item 1', 'item 2']
         Item.objects.create(text=[text for text in new_item_texts])
         
-        self.create_and_login_user()
+        self.create_and_login_user(username='mdco')
         response = self.client.get('/home/')
         
         for text in new_item_texts:
             self.assertContains(response, text)
+
+        self.create_and_login_user(username='spfestin')
+        response = self.client.get('/home/')
+        
+        for text in new_item_texts:
+            self.assertNotContains(response, text)
