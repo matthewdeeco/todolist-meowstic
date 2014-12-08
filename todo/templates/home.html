@@ -8,7 +8,7 @@
 			<small>Today is {% now "F d, Y" %}.</small>
 		</h2>
 
-		<form class="form-horizontal" method="POST">
+		<form class="form-horizontal" method="POST" action="/home/new_item">
 			<input class="form-control" type="text" id="new_item_text" name="new_item_text" placeholder="New To-Do" autofocus />
 			{% csrf_token %}
 		</form>

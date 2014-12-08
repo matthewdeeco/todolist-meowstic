@@ -22,21 +22,6 @@ class HomePageTest(TestCase):
         response = self.client.get('/home/')
         self.assertEqual(response.status_code, 200)
 
-    def test_home_page_can_save_post_request(self):
-        new_item_text = 'A new list item'
-        self.create_and_login_user()
-        response = self.client.post('/home/', data={'new_item_text' : new_item_text})
-
-        # item must have been added to database
-        self.assertEqual(Item.objects.count(), 1)
-        new_item = Item.objects.first()
-        self.assertEqual(new_item.text, new_item_text)
-
-    def test_user_still_at_home_page_after_post(self):
-        self.create_and_login_user()
-        response = self.client.post('/home/', data={'new_item_text' : 'item 1'}, follow=True)
-        self.assertTemplateUsed(response, 'home.html')
-
     def test_user_items_not_visible_to_others(self):
         new_item_texts = ['item 1', 'item 2']
         self.create_and_login_user(username='mdco')
