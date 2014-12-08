@@ -34,6 +34,7 @@ def new_item(request):
 	Item.objects.create(text = request.POST['new_item_text'], user=request.user)
 	return redirect('/home/')
 
+@login_required
 def logout_page(request):
 	logout(request)
 	return redirect('/')
