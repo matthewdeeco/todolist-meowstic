@@ -24,7 +24,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def check_for_item_in_item_list(self, item_text):
         item_list = self.browser.find_element_by_id('item_list')
-        items = item_list.find_elements_by_tag_name('li')
+        items = item_list.find_elements_by_class_name('item_text')
         self.assertIn(item_text, [item.text for item in items])
 
     def input_new_item(self, text):

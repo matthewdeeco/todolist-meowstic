@@ -3,24 +3,37 @@
 {% block body %}
 
 <div class="row">
-	<div class="col-md-6">
-		<h2>Welcome, {{ user.first_name }}! <br />
+	<div class="col-md-9 col-md-offset-1">
+		<h2>Welcome, {{ user.first_name }}! <br/>
 			<small>Today is {% now "F d, Y" %}.</small>
 		</h2>
 
 		<form class="form-horizontal" method="POST">
-			<input class="form-control" type="text" id="new_item_text" name="new_item_text" placeholder="New To-Do" />
+			<input class="form-control" type="text" id="new_item_text" name="new_item_text" placeholder="New To-Do" autofocus />
 			{% csrf_token %}
 		</form>
 
-		<ul class="list-group" id="item_list">
-			<li class="list-group-item active">To-Do</li>
-			{% for item in items %}
-				<li class="list-group-item item_text">
-						{{ item.text }}
-				</li>
-			{% endfor %}
-		</ul>
+		<div class="panel panel-primary" id="item_list">
+			<div class="panel-heading">
+				<span class="panel-title">To-Do</span>
+			</div>
+			<div class="panel-body" id="item_list">
+				<form method="POST" role="form">
+					{% for item in items %}
+						<div class="input-group voffset1">
+							<span class="input-group-addon">
+									<input type="checkbox">
+							</span>
+							<span class="item_text form-control">
+								{{ item.text }}
+							</span>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default">&#x2715;</button>
+						</div>
+					{% endfor %}
+				</form>
+			</div>
+		</div>
 	</div>
 </div>
 
