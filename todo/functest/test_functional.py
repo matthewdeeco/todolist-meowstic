@@ -47,7 +47,6 @@ class NewVisitorTest(StaticLiveServerTestCase):
         inputbox.send_keys(text)
         inputbox.send_keys(Keys.ENTER)
 
-    @skip
     def test_can_start_a_list_and_retrieve_it_later(self):
         mdco_items = ['item 1', 'item 2']
 

@@ -22,7 +22,8 @@
 					{% for item in items %}
 						<div class="input-group voffset1 todo_item" id="item-{{item.id}}">
 							<span class="input-group-addon">
-								<input type="checkbox" value="{{item.id}}">
+								<input type="checkbox" value="{{item.id}}"
+									{% if item.completed %} checked {% endif %}>
 							</span>
 							<span class="item_text form-control">
 								{{ item.text }}
@@ -42,7 +43,8 @@
 
 <script language="javascript" type="text/javascript">
 $('#todo input:checkbox').change(function() {
-    $.post("/home/complete_item", {item_id : $(this).val()});
+	$.ajaxSetup({data: {csrfmiddlewaretoken: '{{ csrf_token }}' },});
+  $.post("/home/toggle_complete_item", {item_id : $(this).val()});
 });
 </script>
 

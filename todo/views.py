@@ -31,14 +31,16 @@ def home_page(request):
 
 @login_required
 def new_item(request):
-	Item.objects.create(text = request.POST['new_item_text'], user=request.user)
+	if request.method == 'POST':
+		Item.objects.create(text = request.POST['new_item_text'], user=request.user)
 	return redirect('/home/')
 
 @login_required
 def toggle_complete_item(request):
-	item = Item.objects.get(id=request.POST['item_id'])
-	item.completed = not item.completed
-	item.save()
+	if request.method == 'POST':
+		item = Item.objects.get(id=request.POST['item_id'])
+		item.completed = not item.completed
+		item.save()
 	return redirect('/home/')
 
 @login_required
