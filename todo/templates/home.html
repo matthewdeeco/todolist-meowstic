@@ -2,22 +2,32 @@
 
 {% block body %}
 
-<div class="greeting">
-    Welcome, {{ user.first_name }}! <br>
-	Today is {% now "F d, Y" %}.
+<div class="row">
+	<div class="col-md-6">
+		<h2>Welcome, {{ user.first_name }}! <br />
+			<small>Today is {% now "F d, Y" %}.</small>
+		</h2>
+
+		<form class="form-horizontal" method="POST">
+			<input class="form-control" type="text" id="new_item_text" name="new_item_text" placeholder="New To-Do" />
+			{% csrf_token %}
+		</form>
+
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h2 class="panel-title">To-Do</h2>
+			</div>
+			<div class="panel-body">
+				<ul class="list-group" id="item_list">
+					{% for item in items %}
+						<li class="list-group-item item_text">
+								{{ item.text }}
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>
-<br>
-
-<form method="POST">
-	<input id="new_item_text" name="new_item_text" placeholder="New To-Do" />
-	{% csrf_token %}
-</form>
-
-<h3>To-Do</h3>
-<table id="item_list">
-	{% for item in items %}
-		<tr><td>{{ forloop.counter }}</td> <td class="item_text">{{ item.text }}</td></tr>
-	{% endfor %}
-</table>
 
 {% endblock %}

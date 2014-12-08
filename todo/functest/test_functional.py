@@ -1,11 +1,11 @@
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
@@ -23,8 +23,8 @@ class NewVisitorTest(LiveServerTestCase):
         self.browser.quit()
 
     def check_for_item_in_item_list(self, item_text):
-        table = self.browser.find_element_by_id('item_list')
-        items = table.find_elements_by_class_name('item_text')
+        item_list = self.browser.find_element_by_id('item_list')
+        items = item_list.find_elements_by_tag_name('li')
         self.assertIn(item_text, [item.text for item in items])
 
     def input_new_item(self, text):
@@ -35,7 +35,7 @@ class NewVisitorTest(LiveServerTestCase):
     def test_can_start_a_list_and_retrieve_it_later(self):
         mdco_items = ['item 1', 'item 2']
 
-        User.objects.create_user(username='mdco', password='password', email='mdco@example.com')
+        User.objects.create_user(username='mdco', password='password', first_name='Matthew')
         self.login_user('mdco')
         self.input_new_item(mdco_items[0])
         self.check_for_item_in_item_list(mdco_items[0])
@@ -49,7 +49,7 @@ class NewVisitorTest(LiveServerTestCase):
         # switch to user spfestin
         self.tearDown()
         self.setUp()
-        User.objects.create_user(username='spfestin', password='password', email='spfestin@example.com')
+        User.objects.create_user(username='spfestin', password='password', first_name='Susan')
         self.login_user('spfestin')
 
         page_text = self.browser.find_element_by_tag_name('body').text
