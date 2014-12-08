@@ -18,11 +18,11 @@
 				<span class="panel-title">To-Do</span>
 			</div>
 			<div class="panel-body" id="item_list">
-				<form method="POST" role="form">
+				<form method="POST" role="form" id="todo">
 					{% for item in items %}
-						<div class="input-group voffset1">
+						<div class="input-group voffset1 todo_item" id="item-{{item.id}}">
 							<span class="input-group-addon">
-									<input type="checkbox" value="complete {{item.id}}" name="complete {{item.id}}">
+								<input type="checkbox" value="{{item.id}}">
 							</span>
 							<span class="item_text form-control">
 								{{ item.text }}
@@ -36,8 +36,14 @@
 		</div>
 	</div>
 	<div class="col-md-2 col-md-pull-1 voffset3">
-		<a href="/logout" class="btn btn-info">Log-out</a>
+		<a href="/logout" id="logout" class="btn btn-info">Log-out</a>
 	</div>
 </div>
+
+<script language="javascript" type="text/javascript">
+$('#todo input:checkbox').change(function() {
+    $.post("/home/complete_item", {item_id : $(this).val()});
+});
+</script>
 
 {% endblock %}

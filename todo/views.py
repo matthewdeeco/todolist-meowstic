@@ -35,6 +35,13 @@ def new_item(request):
 	return redirect('/home/')
 
 @login_required
+def toggle_complete_item(request):
+	item = Item.objects.get(id=request.POST['item_id'])
+	item.completed = not item.completed
+	item.save()
+	return redirect('/home/')
+
+@login_required
 def logout_page(request):
 	logout(request)
 	return redirect('/')
