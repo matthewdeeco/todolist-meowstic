@@ -13,7 +13,7 @@
 			{% csrf_token %}
 		</form>
 
-		<div class="panel panel-primary" id="item_list">
+		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<span class="glyphicon glyphicon-th-list"></span>&nbsp;
 				<span class="panel-title">To-Do</span>
@@ -21,15 +21,17 @@
 			<div class="panel-body" id="item_list">
 				<form method="POST" role="form" id="todo-checklist">
 					{% for item in items %}
-						<div class="input-group voffset1 todo_item" id="item-{{item.id}}">
+						<div class="input-group voffset1 disabled todo_item" id="item-{{item.id}}">
 							<span class="input-group-addon">
 								<input type="checkbox" value="{{item.id}}"
 									class="toggle_complete" id="checkbox-{{item.id}}"
 									{% if item.completed %} checked {% endif %}
 									{% if item.cancelled %} disabled {% endif %}>
 							</span>
-							<span class="form-control">
-								<label for="checkbox{{item.id}}">
+							<span class="form-control
+								{% if item.cancelled %} disabled {% endif %}
+								">
+								<label for="checkbox-{{item.id}}">
 								<span class="item_text">{{item.text}}</span>
 								</label>
 								{% if item.cancelled %}
@@ -51,8 +53,11 @@
 							    	{% if item.cancelled %}
 							    	<span class="glyphicon glyphicon-share-alt"></span> &nbsp; Restore Task
 							    	{% else %}
-										<span class="glyphicon glyphicon-remove"></span> &nbsp; Cancel Task
+										<span class="glyphicon glyphicon-minus-sign"></span> &nbsp; Cancel Task
 										{% endif %}
+							    </a></li>
+							    <li><a href="/home/delete_item/{{item.id}}" class="delete_link">
+							    	<span class="glyphicon glyphicon-trash"></span> &nbsp; Delete Task
 							    </a></li>
 							  </ul>
 							</span>
@@ -93,7 +98,6 @@ $('#todo-checklist input:checkbox').change(function() {
 	$.ajaxSetup({data: {csrfmiddlewaretoken: '{{ csrf_token }}' },});
   $.post("/home/toggle_complete_item", {item_id : item_id}, function(data, val){
   	location.reload()
-  	//$("#item-"+item_id).load()
   });
 });
 </script>

@@ -3,6 +3,7 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from datetime import date
 
 from todo.views import login_page, home_page
@@ -18,7 +19,7 @@ class ItemModelTestCase(TestCase):
 
 class NewItemTest(ItemModelTestCase):
 
-    def test_can_save_post_request(self):
+    def test_can_save_new_item_request(self):
         new_item_text = 'A new list item'
         self.create_and_login_user()
         response = self.client.post('/home/new_item', data={'new_item_text' : new_item_text})
@@ -28,7 +29,7 @@ class NewItemTest(ItemModelTestCase):
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, new_item_text)
 
-    def test_show_home_page_on_post(self):
+    def test_show_home_page_on_new_item(self):
         self.create_and_login_user()
         response = self.client.post('/home/new_item', data={'new_item_text': 'A new list item'}, follow=True)
         self.assertTemplateUsed(response, 'home.html')
@@ -49,24 +50,51 @@ class CompleteItemTest(ItemModelTestCase):
         item = Item.objects.get(id=1)
         self.assertFalse(item.completed)
 
-    def test_show_home_page_on_post(self):
-        user=self.create_and_login_user()
-        Item.objects.create(text='A new list item', user=user)
-        response = self.client.post('/home/toogle_complete_item', data={'item_id' : 1}, follow=True)
-        self.assertTemplateUsed(response, 'home.html')
-
 
 class CancelItemTest(ItemModelTestCase):
 
-    def test_can_save_post_request(self):
-        user =  self.create_and_login_user()
+    def test_can_save_cancel_request(self):
+        user = self.create_and_login_user()
         Item.objects.create(text='A new list item', user=user)
         response = self.client.get('/home/cancel_item/1')
         item = Item.objects.get(id=1)
         self.assertTrue(item.cancelled)
 
-    def test_show_home_page_on_post(self):
-        user=self.create_and_login_user()
+    def test_can_only_cancel_own_items(self):
+        mdco = self.create_and_login_user(username='mdco')
+        Item.objects.create(text='A new list item', user=mdco)
+        Item.objects.create(text='Item number 2', user=mdco)
+        response = self.client.get('/home/cancel_item/1')
+        item = Item.objects.get(id=1)
+        self.assertTrue(item.cancelled)
+
+        spfestin = self.create_and_login_user(username='spfestin')
+        response = self.client.get('/home/cancel_item/2')
+        item = Item.objects.get(id=2)
+        self.assertFalse(item.cancelled)
+
+
+class DeleteItemTest(ItemModelTestCase):
+
+    def test_can_save_delete_request(self):
+        user =  self.create_and_login_user()
         Item.objects.create(text='A new list item', user=user)
-        response = self.client.post('/home/cancel_item', data={'item_id' : 1}, follow=True)
-        self.assertTemplateUsed(response, 'home.html')
+        response = self.client.get('/home/delete_item/1')
+        with self.assertRaises(ObjectDoesNotExist):
+            item = Item.objects.get(id=1)
+
+    def test_can_only_delete_own_items(self):
+        mdco = self.create_and_login_user(username='mdco')
+        Item.objects.create(text='A new list item', user=mdco)
+        Item.objects.create(text='Item number 2', user=mdco)
+        response = self.client.get('/home/delete_item/1')
+        with self.assertRaises(ObjectDoesNotExist):
+            item = Item.objects.get(id=1)
+
+        spfestin = self.create_and_login_user(username='spfestin')
+        response = self.client.get('/home/delete_item/2')
+        try:
+            item = Item.objects.get(id=2)
+        except ObjectDoesNotExist:
+            self.fail('Item 2 must not have been deleted!')
+            pass

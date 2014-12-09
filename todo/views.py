@@ -55,6 +55,14 @@ def cancel_item(request, item_id):
 	return redirect('/home/')
 
 @login_required
+def delete_item(request, item_id):
+	item = Item.objects.get(id=item_id)
+	# make sure user owns the item
+	if item.user == request.user:
+		item.delete()
+	return redirect('/home/')
+
+@login_required
 def logout_page(request):
 	logout(request)
 	return redirect('/')

@@ -3,3 +3,19 @@ input[type=checkbox] {
 	-moz-transform: scale(1.2,1.2);
 	-o-transform: scale(1.2,1.2);
 }
+
+label {
+	font-weight: normal;
+}
+
+#item_list {
+	padding: 0px 5px 0px 5px;
+}
+
+#todo-checklist {
+	margin-bottom: 5px;
+}
+
+.form-control.disabled {
+	background-color: #eee;
+}

@@ -76,7 +76,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertNotIn(mdco_items[0], page_text)
         self.assertNotIn(mdco_items[1], page_text)
         
-        spfestin_item = 'Submit grades'
+        spfestin_item = 'Submit Grades'
         self.input_new_item(spfestin_item)
 
         # list from mdco must still not be viewable, but spfestin's is
