@@ -15,6 +15,7 @@
 
 		<div class="panel panel-primary" id="item_list">
 			<div class="panel-heading">
+				<span class="glyphicon glyphicon-th-list"></span>&nbsp;
 				<span class="panel-title">To-Do</span>
 			</div>
 			<div class="panel-body" id="item_list">
@@ -25,17 +26,48 @@
 								<input type="checkbox" value="{{item.id}}" class="toggle_complete"
 									{% if item.completed %} checked {% endif %}>
 							</span>
-							<span class="item_text form-control">
-								{{ item.text }}
+							<span class="form-control">
+								<span class="item_text">{{item.text}}</span>
+								{% if item.completed %}
+								<big><span class="label label-success pull-right">
+									Completed {{item.completed_on | date:"n/j"}}
+								</span></big>
+								{% endif %}
 							</span>
 							<span class="input-group-btn">
-								<button type="button" class="btn btn-default">&#x2715;</button>
+								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							    <span class="glyphicon glyphicon-edit"></span> <span class="caret"></span>
+							  </button>
+							  <ul class="dropdown-menu" role="menu">
+							    <li><a href="#"><span class="glyphicon glyphicon-remove"></span> &nbsp; Cancel Task </a></li>
+							  </ul>
+							</span>
 						</div>
 					{% endfor %}
 				</form>
 			</div>
 		</div>
+
+		<!-- 
+		<div class="panel panel-success" id="completed_item_list">
+			<div class="panel-heading">
+				<span class="panel-title">Completed</span>
+			</div>
+			<div class="panel-body" id="item_list">
+			</div>
+		</div>
+
+		<div class="panel panel-warning" id="cancelled_item_list">
+			<div class="panel-heading">
+				<span class="panel-title">Cancelled</span>
+			</div>
+			<div class="panel-body" id="item_list">
+			</div>
+		</div>
+		-->
+
 	</div>
+
 	<div class="col-md-2 col-md-pull-1 voffset3">
 		<a href="/logout" id="logout" class="btn btn-info">Log-out</a>
 	</div>
@@ -44,7 +76,9 @@
 <script language="javascript" type="text/javascript">
 $('#todo input:checkbox').change(function() {
 	$.ajaxSetup({data: {csrfmiddlewaretoken: '{{ csrf_token }}' },});
-  $.post("/home/toggle_complete_item", {item_id : $(this).val()});
+  $.post("/home/toggle_complete_item", {item_id : $(this).val()}, function(data, val){
+  	location.reload()
+  });
 });
 </script>
 

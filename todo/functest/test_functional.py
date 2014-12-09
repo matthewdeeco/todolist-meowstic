@@ -48,7 +48,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         inputbox.send_keys(Keys.ENTER)
 
     def test_can_start_a_list_and_retrieve_it_later(self):
-        mdco_items = ['item 1', 'item 2']
+        mdco_items = ['Buy batteries', 'Email prof']
 
         User.objects.create_user(username='mdco', password='password', first_name='Matthew')
         self.login_user('mdco')
@@ -70,7 +70,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertNotIn(mdco_items[0], page_text)
         self.assertNotIn(mdco_items[1], page_text)
         
-        spfestin_item = 'item 3'
+        spfestin_item = 'Submit grades'
         self.input_new_item(spfestin_item)
 
         # list from mdco must still not be viewable, but spfestin's is
@@ -80,7 +80,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertIn(spfestin_item, page_text)
 
     def test_can_mark_item_as_complete_and_retrieve_it_later(self):
-        mdco_items = ['item 1', 'item 2']
+        mdco_items = ['Buy batteries', 'Email prof']
 
         User.objects.create_user(username='mdco', password='password', first_name='Matthew')
         self.login_user('mdco')
