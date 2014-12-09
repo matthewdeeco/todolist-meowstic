@@ -19,18 +19,26 @@
 				<span class="panel-title">To-Do</span>
 			</div>
 			<div class="panel-body" id="item_list">
-				<form method="POST" role="form" id="todo">
+				<form method="POST" role="form" id="todo-checklist">
 					{% for item in items %}
 						<div class="input-group voffset1 todo_item" id="item-{{item.id}}">
 							<span class="input-group-addon">
-								<input type="checkbox" value="{{item.id}}" class="toggle_complete"
-									{% if item.completed %} checked {% endif %}>
+								<input type="checkbox" value="{{item.id}}"
+									class="toggle_complete" id="checkbox-{{item.id}}"
+									{% if item.completed %} checked {% endif %}
+									{% if item.cancelled %} disabled {% endif %}>
 							</span>
 							<span class="form-control">
+								<label for="checkbox{{item.id}}">
 								<span class="item_text">{{item.text}}</span>
-								{% if item.completed %}
+								</label>
+								{% if item.cancelled %}
+								<big><span class="label label-warning pull-right">
+									Cancelled
+								</span></big>
+								{% elif item.completed %}
 								<big><span class="label label-success pull-right">
-									Completed {{item.completed_on | date:"n/j"}}
+									Completed {{item.completed_on | date:"n / j"}}
 								</span></big>
 								{% endif %}
 							</span>
@@ -39,7 +47,13 @@
 							    <span class="glyphicon glyphicon-edit"></span> <span class="caret"></span>
 							  </button>
 							  <ul class="dropdown-menu" role="menu">
-							    <li><a href="#"><span class="glyphicon glyphicon-remove"></span> &nbsp; Cancel Task </a></li>
+							    <li><a href="/home/cancel_item/{{item.id}}" class="cancel_link">
+							    	{% if item.cancelled %}
+							    	<span class="glyphicon glyphicon-share-alt"></span> &nbsp; Restore Task
+							    	{% else %}
+										<span class="glyphicon glyphicon-remove"></span> &nbsp; Cancel Task
+										{% endif %}
+							    </a></li>
 							  </ul>
 							</span>
 						</div>
@@ -74,10 +88,12 @@
 </div>
 
 <script language="javascript" type="text/javascript">
-$('#todo input:checkbox').change(function() {
+$('#todo-checklist input:checkbox').change(function() {
+	var item_id = $(this).val()
 	$.ajaxSetup({data: {csrfmiddlewaretoken: '{{ csrf_token }}' },});
-  $.post("/home/toggle_complete_item", {item_id : $(this).val()}, function(data, val){
+  $.post("/home/toggle_complete_item", {item_id : item_id}, function(data, val){
   	location.reload()
+  	//$("#item-"+item_id).load()
   });
 });
 </script>

@@ -46,6 +46,15 @@ def toggle_complete_item(request):
 	return redirect('/home/')
 
 @login_required
+def cancel_item(request, item_id):
+	item = Item.objects.get(id=item_id)
+	# make sure user owns the item
+	if item.user == request.user:
+		item.cancelled = not item.cancelled
+		item.save()
+	return redirect('/home/')
+
+@login_required
 def logout_page(request):
 	logout(request)
 	return redirect('/')
