@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, render_to_response
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from datetime import date
 
 from todo.models import Item
 
@@ -40,7 +41,12 @@ def toggle_complete_item(request):
 	if request.method == 'POST':
 		item = Item.objects.get(id=request.POST['item_id'])
 		item.completed = not item.completed
+		item.completed_on = date.today() if item.completed else None
+		print(item.completed_on)
 		item.save()
+		item = None
+		item = Item.objects.get(id=request.POST['item_id'])
+		print(item.completed_on)
 	return redirect('/home/')
 
 @login_required
