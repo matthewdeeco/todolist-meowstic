@@ -51,6 +51,7 @@ def cancel_item(request, item_id):
 	# make sure user owns the item
 	if item.user == request.user:
 		item.cancelled = not item.cancelled
+		item.cancelled_on = date.today() if item.cancelled else None
 		item.save()
 	return redirect('/home/')
 

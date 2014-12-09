@@ -36,7 +36,7 @@
 								</label>
 								{% if item.cancelled %}
 								<big><span class="label label-warning pull-right">
-									Cancelled
+									Cancelled {{item.cancelled_on | date:"n / j"}}
 								</span></big>
 								{% elif item.completed %}
 								<big><span class="label label-success pull-right">

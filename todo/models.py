@@ -6,8 +6,9 @@ class Item(Model):
     text = TextField(default='')
     user = ForeignKey(User, default=None)
     completed = BooleanField(default=False)
-    cancelled = BooleanField(default=False)
     completed_on = DateField(null=True, blank=True)
+    cancelled = BooleanField(default=False)
+    cancelled_on = DateField(null=True, blank=True)
     created_on = DateTimeField(default=timezone.now())
 
     def __str__(self):
