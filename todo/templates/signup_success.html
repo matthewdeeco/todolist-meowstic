@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="row voffset6">
+	<div class="col-md-6 col-md-offset-3">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<div class="panel-title">
+					<span class="glyphicon glyphicon-pencil"></span>&nbsp; Sign-up successful
+				</div>
+			</div>
+			<div class="panel-body">
+				Thank you for signing up! Redirecting you to the log-in page...
+				<br>
+				Or click <a href="/login/">here</a> if you don't want to wait.
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+function redirect(){
+   window.location.href = "/login/";
+}
+setTimeout(redirect, 2000);
+</script>
+
+{% endblock %}

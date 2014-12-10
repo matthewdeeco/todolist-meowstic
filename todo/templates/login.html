@@ -6,7 +6,9 @@
 	<div class="col-md-6 col-md-offset-3">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
-				<div class="panel-title">Log-in</div>
+				<div class="panel-title">
+					<span class="glyphicon glyphicon-log-in"></span> &nbsp; Log-in
+				</div>
 			</div>
 			<div class="panel-body">
 				<form method="POST" role="form" class="form-horizontal">
@@ -25,6 +27,7 @@
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<button type="submit" class="btn btn-info" id="submit_btn">Log-in</button>
+							<a href="/signup" id="signup" class="btn btn-success">Sign-up</a>
 						</div>
 					</div>
 					{% csrf_token %}

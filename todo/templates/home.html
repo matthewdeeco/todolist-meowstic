@@ -9,7 +9,14 @@
 		</h2>
 
 		<form class="form-horizontal" method="POST" action="/home/new_item">
-			<input class="form-control" type="text" id="new_item_text" name="new_item_text" placeholder="New To-Do" autofocus />
+			<div class="input-group">
+				<input type="text" class="form-control" id="new_item_text" name="new_item_text" placeholder="New To-Do" autofocus />
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-default">
+						&nbsp;<span class="glyphicon glyphicon-plus"></span>&nbsp;
+					</button>
+				</span>
+			</div>
 			{% csrf_token %}
 		</form>
 
@@ -21,7 +28,7 @@
 			<div class="panel-body" id="item_list">
 				<form method="POST" role="form" id="todo-checklist">
 					{% for item in items %}
-						<div class="input-group voffset1 disabled todo_item" id="item-{{item.id}}">
+						<div class="input-group voffset1 todo_item" id="item-{{item.id}}">
 							<span class="input-group-addon">
 								<input type="checkbox" value="{{item.id}}"
 									class="toggle_complete" id="checkbox-{{item.id}}"
@@ -32,7 +39,7 @@
 								{% if item.cancelled %} disabled {% endif %}
 								">
 								<label for="checkbox-{{item.id}}">
-								<span class="item_text">{{item.text}}</span>
+									<span class="item_text">{{item.text}}</span>
 								</label>
 								{% if item.cancelled %}
 								<big><span class="label label-warning pull-right">
@@ -88,7 +95,8 @@
 	</div>
 
 	<div class="col-md-2 col-md-pull-1 voffset3">
-		<a href="/logout" id="logout" class="btn btn-info">Log-out</a>
+		<a href="/logout" id="logout" class="btn btn-info">
+		Log-out</a>
 	</div>
 </div>
 

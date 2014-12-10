@@ -3,6 +3,7 @@ from django.contrib import admin
 
 urlpatterns = patterns('',
     url(r'^$', 'todo.views.index_page', name='index'),
+    url(r'^signup/', 'todo.views.signup_page', name='signup'),
     url(r'^login/', 'todo.views.login_page', name='login'),
     url(r'^logout', 'todo.views.logout_page', name='logout'),
     url(r'^home/new_item$', 'todo.views.new_item', name='new_item'),
