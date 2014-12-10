@@ -3,6 +3,7 @@ from django.http import HttpRequest
 from django.template.loader import render_to_string
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
+from datetime import date
 
 from todo.views import login_page, home_page
 from todo.models import Item
@@ -37,3 +38,23 @@ class HomePageTest(TestCase):
         
         for text in new_item_texts:
             self.assertNotContains(response, text)
+
+    def test_items_completed_or_cancelled_yesterday_not_shown(self):
+        new_item_texts = ['did yesterday', 'will do today']
+        self.create_and_login_user(username='mdco')
+        mdco = authenticate(username='mdco', password='password')
+
+        today = date.today()
+        yesterday = date.fromordinal(today.toordinal()-1)
+        item1 = Item.objects.create(text=new_item_texts[0], user=mdco)
+        item1.completed = True
+        item1.completed_on = yesterday
+        item1.save()
+        item2 = Item.objects.create(text=new_item_texts[1], user=mdco)
+        item2.completed = True
+        item2.completed_on = today
+        item2.save()
+
+        response = self.client.get('/home/')
+        self.assertNotContains(response, new_item_texts[0])
+        self.assertContains(response, new_item_texts[1])

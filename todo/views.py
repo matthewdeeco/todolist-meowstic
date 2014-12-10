@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import date
+from django.db.models import Q
 
 from todo.models import Item
 
@@ -27,7 +28,9 @@ def login_page(request):
 
 @login_required
 def home_page(request):
-	items = Item.objects.filter(user=request.user)
+	items = Item.objects.filter(user=request.user) \
+		.exclude(Q(cancelled=True) & Q(cancelled_on__lt=date.today())) \
+		.exclude(Q(completed=True) & Q(completed_on__lt=date.today()))
 	return render(request, 'home.html', {'items' : items})
 
 @login_required
@@ -52,6 +55,8 @@ def cancel_item(request, item_id):
 	if item.user == request.user:
 		item.cancelled = not item.cancelled
 		item.cancelled_on = date.today() if item.cancelled else None
+		item.completed = False
+		item.completed_on = None
 		item.save()
 	return redirect('/home/')
 
