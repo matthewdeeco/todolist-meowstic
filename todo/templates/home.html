@@ -70,15 +70,18 @@
 							    <span class="glyphicon glyphicon-edit"></span> <span class="caret"></span>
 							  </button>
 							  <ul class="dropdown-menu" role="menu">
+							    <li><a href="/home/reschedule_item/{{item.id}}" class="reschedule_link">
+							    	<span class="glyphicon glyphicon-time"></span> &nbsp; Reschedule Item
+							    </a></li>
 							    <li><a href="/home/cancel_item/{{item.id}}" class="cancel_link">
 							    	{% if item.cancelled %}
-							    	<span class="glyphicon glyphicon-share-alt"></span> &nbsp; Restore Task
+							    	<span class="glyphicon glyphicon-share-alt"></span> &nbsp; Restore Item
 							    	{% else %}
-										<span class="glyphicon glyphicon-minus-sign"></span> &nbsp; Cancel Task
+										<span class="glyphicon glyphicon-minus-sign"></span> &nbsp; Cancel Item
 										{% endif %}
 							    </a></li>
 							    <li><a href="/home/delete_item/{{item.id}}" class="delete_link">
-							    	<span class="glyphicon glyphicon-trash"></span> &nbsp; Delete Task
+							    	<span class="glyphicon glyphicon-trash"></span> &nbsp; Delete Item
 							    </a></li>
 							  </ul>
 							</span>
