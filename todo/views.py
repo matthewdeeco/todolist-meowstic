@@ -68,8 +68,7 @@ def signup_page(request):
 @login_required
 def home_page(request):
 	items = Item.objects.filter(user=request.user) \
-		.exclude(Q(cancelled=True) & Q(cancelled_on__lt=date.today())) \
-		.exclude(Q(completed=True) & Q(completed_on__lt=date.today()))
+		.exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=date.today()))
 	return render(request, 'home.html', {'items' : items})
 
 @login_required
@@ -83,7 +82,8 @@ def toggle_complete_item(request):
 	if request.method == 'POST':
 		item = Item.objects.get(id=request.POST['item_id'])
 		item.completed = not item.completed
-		item.completed_on = date.today() if item.completed else None
+		item.marked_on = date.today() if item.completed else None
+		item.cancelled = False
 		item.save()
 	return redirect('/home/')
 
@@ -93,9 +93,8 @@ def cancel_item(request, item_id):
 	# make sure user owns the item
 	if item.user == request.user:
 		item.cancelled = not item.cancelled
-		item.cancelled_on = date.today() if item.cancelled else None
+		item.marked_on = date.today() if item.cancelled else None
 		item.completed = False
-		item.completed_on = None
 		item.save()
 	return redirect('/home/')
 
