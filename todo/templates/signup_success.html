@@ -13,7 +13,7 @@
 			<div class="panel-body">
 				Thank you for signing up! Redirecting you to the log-in page...
 				<br>
-				Or click <a href="/login/">here</a> if you don't want to wait.
+				Or click <a href="{% url "login" %}">here</a> if you don't want to wait.
 			</div>
 		</div>
 	</div>
@@ -21,7 +21,7 @@
 
 <script>
 function redirect(){
-   window.location.href = "/login/";
+   window.location.href = "{% url "login" %}";
 }
 setTimeout(redirect, 2000);
 </script>

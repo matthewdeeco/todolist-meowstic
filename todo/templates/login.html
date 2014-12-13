@@ -27,7 +27,7 @@
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<button type="submit" class="btn btn-info" id="submit_btn">Log-in</button>
-							<a href="/signup" id="signup" class="btn btn-success">Sign-up</a>
+							<a href="{% url "signup" %}" id="signup" class="btn btn-success">Sign-up</a>
 						</div>
 					</div>
 					{% csrf_token %}
