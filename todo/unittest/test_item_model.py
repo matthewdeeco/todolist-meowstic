@@ -44,7 +44,7 @@ class CompleteItemTest(ItemModelTestCase):
         response = self.client.post('/home/toggle_complete_item', data={'item_id' : 1})
         item = Item.objects.get(id=1)
         self.assertTrue(item.completed)
-        self.assertEqual(item.completed_on, date.today())
+        self.assertEqual(item.marked_on, date.today())
         # completed items must be set to uncomplete after another toggle
         response = self.client.post('/home/toggle_complete_item', data={'item_id' : 1})
         item = Item.objects.get(id=1)
@@ -98,3 +98,27 @@ class DeleteItemTest(ItemModelTestCase):
         except ObjectDoesNotExist:
             self.fail('Item 2 must not have been deleted!')
             pass
+
+class DueItemTest(ItemModelTestCase):
+
+    def test_check_if_item_is_due(self):
+        mdco = self.create_and_login_user(username='mdco')
+        today = date.today()
+        item = Item.objects.create(text='A new list item', user=mdco, due_on=today)
+        self.assertTrue(item.due())
+
+    def test_count_days_before_item_is_due(self):
+        mdco = self.create_and_login_user(username='mdco')
+        today = date.today()
+        tomorrow = date.fromordinal(today.toordinal()+1)
+        item = Item.objects.create(text='A new list item', user=mdco, due_on=tomorrow)
+        self.assertEqual(item.due_in(), 1)
+
+    def test_count_days_since_item_was_due(self):
+        mdco = self.create_and_login_user(username='mdco')
+        today = date.today()
+        yesterday = date.fromordinal(today.toordinal()-1)
+        item = Item.objects.create(text='A new list item', user=mdco, due_on=yesterday)
+        self.assertTrue(item.overdue())
+        self.assertEqual(item.overdue_by(), 1)
+        

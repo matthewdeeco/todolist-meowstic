@@ -48,11 +48,11 @@ class HomePageTest(TestCase):
         yesterday = date.fromordinal(today.toordinal()-1)
         item1 = Item.objects.create(text=new_item_texts[0], user=mdco)
         item1.completed = True
-        item1.completed_on = yesterday
+        item1.marked_on = yesterday
         item1.save()
         item2 = Item.objects.create(text=new_item_texts[1], user=mdco)
         item2.completed = True
-        item2.completed_on = today
+        item2.marked_on = today
         item2.save()
 
         response = self.client.get('/home/')

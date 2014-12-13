@@ -41,15 +41,29 @@
 								<label for="checkbox-{{item.id}}">
 									<span class="item_text">{{item.text}}</span>
 								</label>
-								{% if item.cancelled %}
-								<big><span class="label label-warning pull-right">
-									Cancelled {{item.marked_on | date:"n / j"}}
-								</span></big>
-								{% elif item.completed %}
-								<big><span class="label label-success pull-right">
-									Completed {{item.marked_on | date:"n / j"}}
-								</span></big>
-								{% endif %}
+								<big>
+									{% if item.cancelled %}
+										<span class="label label-default pull-right">
+											Cancelled
+										</span>
+									{% elif item.completed %}
+										<span class="label label-success pull-right">
+											Completed
+										</span>
+									{% elif item.overdue %}
+										<span class="label label-danger pull-right">
+											Overdue by {{item.overdue_by}}
+										</span>
+									{% elif item.due %}
+										<span class="label label-warning pull-right">
+											Due Today
+										</span>
+									{% elif item.due_on %}
+										<span class="label label-info pull-right">
+											Due in {{item.due_in}} <!--{{item.due_on | date:"n / j"}}-->
+										</span>
+									{% endif %}
+								</big>
 							</span>
 							<span class="input-group-btn">
 								<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -73,25 +87,6 @@
 				</form>
 			</div>
 		</div>
-
-		<!-- 
-		<div class="panel panel-success" id="completed_item_list">
-			<div class="panel-heading">
-				<span class="panel-title">Completed</span>
-			</div>
-			<div class="panel-body" id="item_list">
-			</div>
-		</div>
-
-		<div class="panel panel-warning" id="cancelled_item_list">
-			<div class="panel-heading">
-				<span class="panel-title">Cancelled</span>
-			</div>
-			<div class="panel-body" id="item_list">
-			</div>
-		</div>
-		-->
-
 	</div>
 
 	<div class="col-md-2 col-md-pull-1 voffset3">
