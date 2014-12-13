@@ -18,6 +18,9 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
+    def get(self, address):
+        self.browser.get(self.live_server_url + address)
+
     def login_user(self, username, password='password'):
         username_box = self.browser.find_element_by_id('username')
         username_box.send_keys(username)
@@ -29,11 +32,13 @@ class NewVisitorTest(StaticLiveServerTestCase):
         logout_link = self.browser.find_element_by_id('logout')
         logout_link.click()
 
+    def send_keys_to_element_with_id(self, keys, element_id):
+        element = self.browser.find_element_by_id(element_id)
+        element.send_keys(keys)
+        sleep(0.5)
+
     def input_new_item(self, text):
-        inputbox = self.browser.find_element_by_id('new_item_text')
-        inputbox.send_keys(text)
-        inputbox.send_keys(Keys.ENTER)
-        sleep(1)
+        self.send_keys_to_element_with_id(text + '\n', 'new_item_text')
 
     def check_for_item_in_item_list(self, item_text):
         item_list = self.browser.find_element_by_id('item_list')
@@ -129,3 +134,18 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertFalse(checkbox3.is_enabled())
         self.assertTrue(checkbox4.is_enabled())
 
+    def test_can_signup_and_login_later(self):
+        self.get('/signup/')
+        self.send_keys_to_element_with_id('mdco', 'username')
+        self.send_keys_to_element_with_id('mdco@example.com', 'email')
+        self.send_keys_to_element_with_id('pass', 'password1')
+        self.send_keys_to_element_with_id('pass', 'password2')
+        self.send_keys_to_element_with_id('Matthew', 'first_name')
+        self.send_keys_to_element_with_id('Co', 'last_name')
+        submit_btn = self.browser.find_element_by_id('submit_btn')
+        submit_btn.click()
+
+        self.get('/login/')
+        self.login_user('mdco', 'pass')
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertIn('Welcome', page_text)
