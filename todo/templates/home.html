@@ -37,7 +37,7 @@
 			</div>
 			<div class="panel-body" id="item_list">
 				<form method="POST" role="form" id="todo-checklist">
-					{% for item in items %}
+					{% for item in daily_items %}
 						<div class="input-group voffset1 todo_item" id="item-{{item.id}}">
 							<span class="input-group-addon">
 								<input type="checkbox" value="{{item.id}}"

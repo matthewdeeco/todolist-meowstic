@@ -67,10 +67,13 @@ def signup_page(request):
 
 @login_required
 def home_page(request):
-	items = Item.objects.filter(user=request.user) \
-		.exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=date.today())) \
-		.order_by('due_on')
-	return render(request, 'home.html', {'items' : items})
+	daily_items = Item.daily_objects.filter(user=request.user).order_by('due_on')
+	weekly_items = Item.weekly_objects.filter(user=request.user).order_by('due_on')
+	monthly_items = Item.monthly_objects.filter(user=request.user).order_by('due_on')
+	return render(request, 'home.html', {
+		'daily_items' : daily_items,
+		'weekly_items' : weekly_items,
+		'monthly_items' : monthly_items})
 
 @login_required
 def new_item(request):
