@@ -59,7 +59,7 @@
 										</span>
 									{% elif item.completed %}
 										<span class="label label-success pull-right">
-											Completed
+											Completed <!--{{item.marked_on | date:"n / j"}}-->
 										</span>
 									{% elif item.overdue %}
 										<span class="label label-danger pull-right">
@@ -71,7 +71,7 @@
 										</span>
 									{% elif item.due_on %}
 										<span class="label label-info pull-right">
-											Due in {{item.due_in}} day{{item.due_in|pluralize}}<!--{{item.due_on | date:"n / j"}}-->
+											Due in {{item.due_in}} day{{item.due_in|pluralize}}
 										</span>
 									{% endif %}
 								</big>

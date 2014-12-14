@@ -7,30 +7,27 @@ import calendar
 
 class DailyItemManager(Manager):
     def get_queryset(self):
-        limit = date.today()
+        today = date.today()
         return super(DailyItemManager, self).get_queryset() \
-            .filter(due_on__lte=limit) \
-            .exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=limit))
+            .filter(due_on__lte=today) \
+            .exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=today))
 
 class WeeklyItemManager(Manager):
     def get_queryset(self):
-        six_days_later = date.fromordinal(date.today().toordinal() + 6)
-        limit = six_days_later
+        six_days_after = date.fromordinal(date.today().toordinal() + 6)
         return super(WeeklyItemManager, self).get_queryset() \
-            .filter(due_on__lte=limit) \
-            .exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=limit))
+            .filter(due_on__lte=six_days_after) \
+            .exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=date.today()))
 
 class MonthlyItemManager(Manager):
     def get_queryset(self):
         today = date.today()
-        year = today.year
-        month = today.month
-        days_in_month = calendar.monthrange(year, month)[1]
+        days_in_month = calendar.monthrange(today.year, today.month)[1]
         end_of_month = today.replace(day=days_in_month)
-        limit = end_of_month
+
         return super(MonthlyItemManager, self).get_queryset() \
-            .filter(due_on__lte=limit) \
-            .exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=limit))
+            .filter(due_on__lte=end_of_month) \
+            .exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=date.today()))
 
 class Item(Model):
     text = TextField(default='')
