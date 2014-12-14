@@ -20,7 +20,17 @@
 			{% csrf_token %}
 		</form>
 
-		<div class="panel panel-primary">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+			  <ul class="nav nav-pills nav-justified">
+			    <li class="active"><a href="#company" data-toggle="tab">Daily</a></li>
+			    <li><a href="#pressroom" data-toggle="tab">Weekly</a></li>
+			    <li><a href="#contacts" data-toggle="tab">Monthly</a></li>
+			  </ul>
+			</div>
+		</div>
+
+		<div class="panel panel-primary voffset3">
 			<div class="panel-heading">
 				<span class="glyphicon glyphicon-th-list"></span>&nbsp;
 				<span class="panel-title">To-Do</span>

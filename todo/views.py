@@ -93,7 +93,6 @@ def reschedule_item(request):
 	if request.method == 'POST':
 		item = Item.objects.get(id=request.POST['item_id'])
 		due_on = request.POST['due_on']
-		print(due_on)
 		item.due_on = due_on
 		item.save()
 	return redirect('/home/')

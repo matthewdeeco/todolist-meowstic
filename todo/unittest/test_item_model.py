@@ -51,6 +51,17 @@ class CompleteItemTest(ItemModelTestCase):
         self.assertFalse(item.completed)
 
 
+class RescheduleItemTest(ItemModelTestCase):
+
+    def test_can_save_post_request(self):
+        user =  self.create_and_login_user()
+        Item.objects.create(text='A new list item', user=user, due_on='2000-01-01')
+        today = date.today()
+        response = self.client.post('/home/reschedule_item', data={'item_id':1, 'due_on':today})
+        item = Item.objects.get(id=1)
+        self.assertEqual(item.due_on, today)
+
+
 class CancelItemTest(ItemModelTestCase):
 
     def test_can_save_cancel_request(self):
