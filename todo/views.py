@@ -78,7 +78,9 @@ def home_page(request):
 @login_required
 def new_item(request):
 	if request.method == 'POST':
-		Item.objects.create(text = request.POST['new_item_text'], user=request.user)
+		text = request.POST['new_item_text']
+		if text:
+			Item.objects.create(text=text, user=request.user)
 	return redirect('/home/')
 
 @login_required

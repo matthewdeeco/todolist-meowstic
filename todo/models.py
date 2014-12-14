@@ -42,6 +42,7 @@ class Item(Model):
     marked_on = DateField(null=True, blank=True)
     created_on = DateTimeField(default=timezone.now())
 
+    objects = Manager()
     daily_objects = DailyItemManager()
     weekly_objects = WeeklyItemManager()
     monthly_objects = MonthlyItemManager()

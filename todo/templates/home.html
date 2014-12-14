@@ -36,8 +36,9 @@
 				<span class="panel-title">To-Do</span>
 			</div>
 			<div class="panel-body" id="item_list">
+				{% with items=daily_items %}
 				<form method="POST" role="form" id="todo-checklist">
-					{% for item in daily_items %}
+					{% for item in items %}
 						<div class="input-group voffset1 todo_item" id="item-{{item.id}}">
 							<span class="input-group-addon">
 								<input type="checkbox" value="{{item.id}}"
@@ -62,7 +63,7 @@
 										</span>
 									{% elif item.overdue %}
 										<span class="label label-danger pull-right">
-											Overdue by {{item.overdue_by}}
+											Overdue by {{item.overdue_by}} day{{item.overdue_by|pluralize}}
 										</span>
 									{% elif item.due %}
 										<span class="label label-warning pull-right">
@@ -70,7 +71,7 @@
 										</span>
 									{% elif item.due_on %}
 										<span class="label label-info pull-right">
-											Due in {{item.due_in}} <!--{{item.due_on | date:"n / j"}}-->
+											Due in {{item.due_in}} day{{item.due_in|pluralize}}<!--{{item.due_on | date:"n / j"}}-->
 										</span>
 									{% endif %}
 								</big>
@@ -98,6 +99,7 @@
 						</div>
 					{% endfor %}
 				</form>
+				{% endwith %}
 			</div>
 		</div>
 	</div>
