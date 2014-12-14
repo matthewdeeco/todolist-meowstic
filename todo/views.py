@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from datetime import date
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.db.models import Q
 
 from todo.models import Item
@@ -68,7 +68,8 @@ def signup_page(request):
 @login_required
 def home_page(request):
 	items = Item.objects.filter(user=request.user) \
-		.exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=date.today()))
+		.exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=date.today())) \
+		.order_by('due_on')
 	return render(request, 'home.html', {'items' : items})
 
 @login_required
@@ -84,6 +85,16 @@ def toggle_complete_item(request):
 		item.completed = not item.completed
 		item.marked_on = date.today() if item.completed else None
 		item.cancelled = False
+		item.save()
+	return redirect('/home/')
+
+@login_required
+def reschedule_item(request):
+	if request.method == 'POST':
+		item = Item.objects.get(id=request.POST['item_id'])
+		due_on = request.POST['due_on']
+		print(due_on)
+		item.due_on = due_on
 		item.save()
 	return redirect('/home/')
 

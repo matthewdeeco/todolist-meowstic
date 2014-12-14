@@ -12,6 +12,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(10)
+        self.browser.set_page_load_timeout(10)
         self.browser.get(self.live_server_url)
         sleep(1)
 
@@ -59,7 +60,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         return cancel_link[0]
 
     def test_can_start_a_list_and_retrieve_it_later(self):
-        mdco_items = ['Buy batteries', 'Email prof']
+        mdco_items = ['Buy', 'Email']
 
         User.objects.create_user(username='mdco', password='password', first_name='Matthew')
         self.login_user('mdco')
@@ -81,7 +82,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.assertNotIn(mdco_items[0], page_text)
         self.assertNotIn(mdco_items[1], page_text)
         
-        spfestin_item = 'Submit Grades'
+        spfestin_item = 'Check'
         self.input_new_item(spfestin_item)
 
         # list from mdco must still not be viewable, but spfestin's is
@@ -93,7 +94,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def test_can_change_item_attributes_and_retrieve_it_later(self):
         User.objects.create_user(username='mdco', password='password', first_name='Matthew')
         self.login_user('mdco')
-        mdco_items = ['Buy batteries', 'Email prof', 'Call a friend', 'Pass report']
+        mdco_items = ['Type', 'Email', 'Call', 'Buy']
         for item in mdco_items:
             self.input_new_item(item)
 
@@ -137,14 +138,15 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def test_can_signup_and_login_later(self):
         self.get('/signup/')
         self.send_keys_to_element_with_id('mdco', 'username')
-        self.send_keys_to_element_with_id('mdco@example.com', 'email')
+        self.send_keys_to_element_with_id('email', 'email')
         self.send_keys_to_element_with_id('pass', 'password1')
         self.send_keys_to_element_with_id('pass', 'password2')
         self.send_keys_to_element_with_id('Matthew', 'first_name')
         self.send_keys_to_element_with_id('Co', 'last_name')
         submit_btn = self.browser.find_element_by_id('submit_btn')
         submit_btn.click()
-
+        sleep(3)
+        
         self.get('/login/')
         self.login_user('mdco', 'pass')
         page_text = self.browser.find_element_by_tag_name('body').text

@@ -5,7 +5,7 @@
 <div class="row">
 	<div class="col-md-9 col-md-offset-1">
 		<h2>Welcome, {{ user.first_name }}! <br/>
-			<small>Today is {% now "F d, Y" %}.</small>
+			<small>Today is {% now "l, F d, Y" %}.</small>
 		</h2>
 
 		<form class="form-horizontal" method="POST" action="/home/new_item">
@@ -70,7 +70,7 @@
 							    <span class="glyphicon glyphicon-edit"></span> <span class="caret"></span>
 							  </button>
 							  <ul class="dropdown-menu" role="menu">
-							    <li><a href="/home/reschedule_item/{{item.id}}" class="reschedule_link">
+							    <li><a href="#date_dialog" class="reschedule_link" data-toggle="modal" data-target="#date_dialog" data-itemid="{{item.id}}" data-itemdueon="{{item.due_on}}" data-itemtext="{{item.text}}">
 							    	<span class="glyphicon glyphicon-time"></span> &nbsp; Reschedule Item
 							    </a></li>
 							    <li><a href="/home/cancel_item/{{item.id}}" class="cancel_link">
@@ -93,19 +93,73 @@
 	</div>
 
 	<div class="col-md-2 col-md-pull-1 voffset3">
-		<a href="/logout" id="logout" class="btn btn-info">
+		<a href="{% url "logout" %}" id="logout" class="btn btn-info">
 		Log-out</a>
 	</div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
+<div class="modal fade" id="date_dialog" tabindex="-1" role="dialog" aria-labelledby="modal_label" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="modal_label">Reschedule Item</h4>
+      </div>
+      <form method="POST" role="form" action="{% url "reschedule_item" %}">
+      	{% csrf_token %}
+      	<input type="hidden" name="item_id" id="date_dialog_itemid">
+	      <div class="modal-body">
+	          <div class="form-group">
+	            <label for="date_dialog_itemtext" class="control-label">Text:</label>
+	            <input type="text" class="form-control" id="date_dialog_itemtext" readonly>
+	          </div>
+	          <div class="form-group">
+	            <label for="date_dialog_dueon" class="control-label">Due on:</label>
+	            <input type="text" class="form-control" id="date_dialog_datepicker"></input>
+	            <input type="hidden" id="date_dialog_dueon" name="due_on" />
+	          </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="submit" class="btn btn-primary">Save changes</button>
+	      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script language="javascript" type="text/javascript">
+$(function() {
+	$('#date_dialog_datepicker').datepicker({
+		dateFormat: "M. d, yy",
+		altFormat: "yy-mm-dd",
+		altField: "#date_dialog_dueon"});
+});
+
+// Post when checkbox is ticked/unticked
 $('#todo-checklist input:checkbox').change(function() {
 	var item_id = $(this).val()
 	$.ajaxSetup({data: {csrfmiddlewaretoken: '{{ csrf_token }}' },});
-  $.post("/home/toggle_complete_item", {item_id : item_id}, function(data, val){
+  $.post("{% url "toggle_complete_item" %}", {item_id : item_id}, function(data, val){
   	location.reload()
   });
 });
+
+// Show text and due date of item
+$('#date_dialog').on('show.bs.modal', function (event) {
+  var link = $(event.relatedTarget)
+  var item_id = link.data('itemid')
+  var text = link.data('itemtext')
+  var due_on = link.data('itemdueon')
+
+  var modal = $(this)
+  modal.find('#date_dialog_itemid').val(item_id)
+  modal.find('#date_dialog_itemtext').val(text)
+  modal.find('#date_dialog_datepicker').datepicker('setDate', due_on)
+})
 </script>
 
 {% endblock %}
