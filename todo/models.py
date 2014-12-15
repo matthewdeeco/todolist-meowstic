@@ -4,7 +4,6 @@ from django.utils import timezone
 from datetime import date
 import calendar
 
-
 class DailyItemManager(Manager):
     def get_queryset(self):
         today = date.today()
@@ -14,10 +13,13 @@ class DailyItemManager(Manager):
 
 class WeeklyItemManager(Manager):
     def get_queryset(self):
-        six_days_after = date.fromordinal(date.today().toordinal() + 6)
+        Saturday = 5
+        today = date.today()
+        days_till_upcoming_saturday = (Saturday - today.weekday()) % 7
+        upcoming_saturday = date.fromordinal(today.toordinal() + days_till_upcoming_saturday)
         return super(WeeklyItemManager, self).get_queryset() \
-            .filter(due_on__lte=six_days_after) \
-            .exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=date.today()))
+            .filter(due_on__lte=upcoming_saturday) \
+            .exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=today))
 
 class MonthlyItemManager(Manager):
     def get_queryset(self):
@@ -27,7 +29,7 @@ class MonthlyItemManager(Manager):
 
         return super(MonthlyItemManager, self).get_queryset() \
             .filter(due_on__lte=end_of_month) \
-            .exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=date.today()))
+            .exclude((Q(cancelled=True) | Q(completed=True)) & Q(marked_on__lt=today))
 
 class Item(Model):
     text = TextField(default='')

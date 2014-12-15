@@ -36,7 +36,7 @@
 				<span class="panel-title">To-Do</span>
 			</div>
 			<div class="panel-body" id="item_list">
-				{% with items=daily_items %}
+				{% with items=weekly_items %}
 				<form method="POST" role="form" id="todo-checklist">
 					{% for item in items %}
 						<div class="input-group voffset1 todo_item" id="item-{{item.id}}">
