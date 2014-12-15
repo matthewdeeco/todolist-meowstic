@@ -67,13 +67,33 @@ def signup_page(request):
 
 @login_required
 def home_page(request):
+	if last_view == 'weekly':
+		return weekly_view(request)
+	elif last_view == 'monthly':
+		return monthly_view(request)
+	else:
+		return daily_view(request)
+
+@login_required
+def daily_view(request):
+	global last_view 
+	last_view = 'daily'
 	daily_items = Item.daily_objects.filter(user=request.user).order_by('due_on')
+	return render(request, 'home.html', {'items':daily_items, 'active_tab':'daily'})
+
+@login_required
+def weekly_view(request):
+	global last_view 
+	last_view = 'weekly'
 	weekly_items = Item.weekly_objects.filter(user=request.user).order_by('due_on')
+	return render(request, 'home.html', {'items':weekly_items, 'active_tab':'weekly'})
+
+@login_required
+def monthly_view(request):
+	global last_view 
+	last_view = 'monthly'
 	monthly_items = Item.monthly_objects.filter(user=request.user).order_by('due_on')
-	return render(request, 'home.html', {
-		'daily_items' : daily_items,
-		'weekly_items' : weekly_items,
-		'monthly_items' : monthly_items})
+	return render(request, 'home.html', {'items':monthly_items, 'active_tab':'monthly'})
 
 @login_required
 def new_item(request):

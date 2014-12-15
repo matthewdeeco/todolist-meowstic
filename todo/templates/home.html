@@ -23,9 +23,15 @@
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
 			  <ul class="nav nav-pills nav-justified">
-			    <li class="active"><a href="#company" data-toggle="tab">Daily</a></li>
-			    <li><a href="#pressroom" data-toggle="tab">Weekly</a></li>
-			    <li><a href="#contacts" data-toggle="tab">Monthly</a></li>
+			    <li {%ifequal active_tab "daily"%} class="active" {%endifequal%}>
+			    	<a href="{%url "daily_view"%}">Today</a>
+			    </li>
+			    <li {%ifequal active_tab "weekly"%} class="active" {%endifequal%}>
+			    	<a href="{%url "weekly_view"%}">This Week</a>
+			    </li>
+			    <li {%ifequal active_tab "monthly"%} class="active" {%endifequal%}>
+			    	<a href="{%url "monthly_view"%}">This Month</a>
+			    </li>
 			  </ul>
 			</div>
 		</div>
@@ -36,7 +42,6 @@
 				<span class="panel-title">To-Do</span>
 			</div>
 			<div class="panel-body" id="item_list">
-				{% with items=weekly_items %}
 				<form method="POST" role="form" id="todo-checklist">
 					{% for item in items %}
 						<div class="input-group voffset1 todo_item" id="item-{{item.id}}">
@@ -99,7 +104,6 @@
 						</div>
 					{% endfor %}
 				</form>
-				{% endwith %}
 			</div>
 		</div>
 	</div>
