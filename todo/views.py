@@ -9,6 +9,8 @@ from django.db.models import Q
 
 from todo.models import Item
 
+last_view = None
+
 def index_page(request):
 	if request.user.is_authenticated():
 		return redirect('/home/')
